@@ -32,4 +32,8 @@ jsp会被编译成一个servlet，无需XML或者注解配置，方便html返回
 
 mvc实现
 
+### jdbc
+
+jdbc是一种规范， 不同数据实现这种规范就可以使用相同的代码操作数据库,jdbc定义接口，具体的实现是各数据库提供的jabc驱动实现的，这里使用的是`sqlite-jdbc`
+
 orm实现
