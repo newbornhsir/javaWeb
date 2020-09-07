@@ -1,6 +1,6 @@
-# java
+# servlet版本
 
-java学习项目
+web开发
 
 ## maven创建web项目
 
