@@ -18,7 +18,7 @@ public class Test extends HttpServlet {
 	
 	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		PrintWriter pw = resp.getWriter();
-		pw.print("test servlet");
+		pw.print("test servlets");
 		pw.close();
 	}
 
