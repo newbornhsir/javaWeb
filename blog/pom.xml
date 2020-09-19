@@ -7,6 +7,9 @@
   <version>0.0.1-SNAPSHOT</version>
   <name>blog Maven Webapp</name>
   <url>http://maven.apache.org</url>
+  <properties>
+  	<spring.version>5.2.8.RELEASE</spring.version>
+  </properties>
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
@@ -27,6 +30,13 @@
 	    <artifactId>sqlite-jdbc</artifactId>
 	    <version>3.28.0</version>
 	</dependency>
+	<!-- https://mvnrepository.com/artifact/org.springframework/spring-context -->
+<dependency>
+    <groupId>org.springframework</groupId>
+    <artifactId>spring-context</artifactId>
+    <version>${spring.version}</version>
+</dependency>
+	
   </dependencies>
   <build>
     <finalName>blog</finalName>
