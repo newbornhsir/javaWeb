@@ -1,8 +1,21 @@
 # javaEE
 
-## 创建maven项目，并通过servlet实现web开发, jdbc操作数据库
+## 学习路线
 
-servlet分支
+### servlet开发
+
+#### mvc
+
+servlet + jsp + jdbc
+
+#### orm
+
+### mybatis
+### spring -> spring mvc -> spring boot
+### spring cloud
+### 容器、微服务
+
+
 
 ## 使用spring相关
 
