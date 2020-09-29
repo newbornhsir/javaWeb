@@ -15,7 +15,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 import com.newbornhsir.util.RedisUtil;
-import com.newbornhsir.util.ResponseResult;
+import com.newbornhsir.util.ResultUtil;
 
 import redis.clients.jedis.Jedis;
 
@@ -61,10 +61,9 @@ public class Authentication implements Filter{
 		/**
 		 * 返回数据，用户未登陆
 		 */
-		String json = new ResponseResult<>(ResponseResult.Code.NotLogin).toJson();
 		response.setContentType("application/json;charset=utf-8");
 		PrintWriter pw = response.getWriter();
-		pw.print(json);
+		pw.print(ResultUtil.response(ResultUtil.CodeEnum.NOT_LOGIN));
 		pw.flush();
 		pw.close();
 	}

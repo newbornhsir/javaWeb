@@ -21,7 +21,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.newbornhsir.dao.po.User;
 import com.newbornhsir.util.MybatisConfig;
 import com.newbornhsir.util.RedisUtil;
-import com.newbornhsir.util.ResponseResult;
+import com.newbornhsir.util.ResultUtil;
 
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.params.SetParams;
@@ -47,18 +47,14 @@ public class Login extends HttpServlet{
 		JSONObject json = JSON.parseObject(jsonStr);
 		String username = json.getString("username");
 		String password = json.getString("password");
-		ResponseResult<?> responseResult = null;
+		String responseJson;
 		if (username == null || password == null) {
-			responseResult = new ResponseResult<>(ResponseResult.Code.Common);
-			responseResult.setMessage("请填写用户名或者密码");
+			responseJson = ResultUtil.error(ResultUtil.CodeEnum.ACCOUNT_ERROE.getCode(), "请填写用户名或者密码");
 		} else {
 			SqlSession ss = MybatisConfig.sqlSessionFactory.openSession();
 			List<User> users = ss.selectList("com.newbornhsir.dao.mapper.UserMapper.selectUserByUserName", username);
-			String message;
 			if (users.size() == 0) {
-				message = "用户名不存在";
-				responseResult = new ResponseResult<Object>(ResponseResult.Code.Common);
-				responseResult.setMessage(message);
+				responseJson = ResultUtil.error(ResultUtil.CodeEnum.ACCOUNT_ERROE.getCode(), "用户名不存在");
 			} else {
 				User user = users.get(0);
 				String pwd = user.getPwd();
@@ -92,20 +88,17 @@ public class Login extends HttpServlet{
 					setParams.ex(24*60*60);
 					jedis.set(userCookieValue, "", setParams);
 					resp.addCookie(userCookie);
-					message = "登陆成功";
-					responseResult = new ResponseResult<Object>(ResponseResult.Code.OK);
-					responseResult.setMessage(message);
+					responseJson = ResultUtil.success();
+				
 				} else {
-					message = "用户名或密码错误";
-					responseResult = new ResponseResult<Object>(ResponseResult.Code.Common);
-					responseResult.setMessage(message);
+					responseJson = ResultUtil.response(ResultUtil.CodeEnum.ACCOUNT_ERROE);
 				}
 			}
 			ss.close();
 		}
 		resp.setContentType("application/json;charset=utf-8");
 		PrintWriter pw = resp.getWriter();
-		pw.println(responseResult.toJson());
+		pw.println(responseJson);
 		pw.close();
 	}
 }

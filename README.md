@@ -13,6 +13,12 @@
 5. post请求参数，表单可以直接获取，json需要自己从输入流中解析 TODO: 提取请求中的参数
 6. SESSION Cookie JSESSION
 
+#### 请求返回数据封装
+
+1. 返回数据格式 code message data
+2. Code 封装枚举类
+3. 转json
+
 #### mvc
 
 servlet + jsp + jdbc
