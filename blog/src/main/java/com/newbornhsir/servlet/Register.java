@@ -3,6 +3,7 @@ package com.newbornhsir.servlet;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -11,6 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.ibatis.session.SqlSession;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.newbornhsir.dao.po.User;
 import com.newbornhsir.util.MybatisConfig;
 
@@ -23,19 +26,28 @@ public class Register extends HttpServlet {
 
 	@Override
 	public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
-		String username = req.getParameter("username");
-		String pwd = req.getParameter("password");
-		String age = req.getParameter("age");
-		String address = req.getParameter("address");
+//		String username = req.getParameter("username");
+//		String pwd = req.getParameter("password");
+//		String age = req.getParameter("age");
+//		String address = req.getParameter("address");
+		
+		String jsonStr = req.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+		System.out.println(jsonStr);
+		JSONObject json = JSON.parseObject(jsonStr);
+		String username = json.getString("username");
+		String password = json.getString("password");
+		String address = json.getString("address");
+		String age = json.getString("age");
 		User user = new User();
 		user.setName(username);
-		user.setPwd(pwd);
+		user.setPwd(password);
 		user.setAddress(address);
 		try {
 			user.setAge(Integer.valueOf(age));
 		} catch (Exception e) {
 			System.out.println(e);
 		}
+		System.out.println(user);
 		// 先查后加， 用户名不能重复
 		SqlSession ss = MybatisConfig.sqlSessionFactory.openSession();
 		List<User> users = ss.selectList("com.newbornhsir.dao.mapper.UserMapper.selectUserByUserName", username);
