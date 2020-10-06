@@ -2,11 +2,8 @@ package com.newbornhsir.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.URLDecoder;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.servlet.annotation.WebServlet;
@@ -20,17 +17,16 @@ import com.newbornhsir.util.ResultUtil;
 
 import redis.clients.jedis.Jedis;
 
-@WebServlet(urlPatterns="/auth")
-public class Auth extends HttpServlet {
+@WebServlet(urlPatterns="/logout")
+public class logout extends HttpServlet {
+
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
-	@Override
-	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-		resp.setContentType("application/json;charset=utf-8");
-		// 获取session判断是否登陆
+	
+	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		// 获取cookie
 		Cookie[] cookies = ((HttpServletRequest) req).getCookies();
 		List<Cookie> sessionCookies = Arrays.asList(cookies).stream().filter((Cookie cookie) -> cookie.getName().equals("user")).collect(Collectors.toList());
 		PrintWriter pw = resp.getWriter();
@@ -39,12 +35,8 @@ public class Auth extends HttpServlet {
 			String sessionId = sessionCookies.get(0).getValue();
 			Jedis jedis = RedisUtil.connect();
 			if (jedis.exists(sessionId)) {
-				System.out.println(sessionId);
-				jedis.expire(sessionId, 60*60*24); // 更新过期时间
-				Map<String, String> map = new HashMap<String, String>();
-				String userName = URLDecoder.decode(sessionId, "UTF-8").split("%=%=%=")[1];
-				map.put("userName", userName);
-				pw.println(ResultUtil.success(map));
+				jedis.del(sessionId); // 删除
+				pw.println(ResultUtil.success());
 			} else {
 				// 清除session
 				Cookie userCookie = new Cookie("user", null);
@@ -56,4 +48,5 @@ public class Auth extends HttpServlet {
 		}
 		pw.close();
 	}
+
 }
