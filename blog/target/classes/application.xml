@@ -4,4 +4,15 @@
     xsi:schemaLocation="http://www.springframework.org/schema/beans
         https://www.springframework.org/schema/beans/spring-beans.xsd">
 
+	<bean id="helloWorld" class="com.newbornhsir.context.HelloWorld" scope="singleton">
+		<property name="message" value="value from xml"></property>
+		<constructor-arg ref="commonLog"></constructor-arg>
+		<constructor-arg ref="specialLog"></constructor-arg>
+	</bean>
+	<bean id="commonLog" class="com.newbornhsir.context.CommonLog"></bean>
+	<bean id="specialLog" class="com.newbornhsir.context.SpecialLog"></bean>
+	
+	<bean id="processor" class="com.newbornhsir.context.BeanProcessor">
+	</bean>
+
 </beans>

@@ -11,38 +11,31 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
-import com.newbornhsir.util.RedisUtil;
+import com.newbornhsir.SpringApplication;
+import com.newbornhsir.beans.UserSession;
 import com.newbornhsir.util.ResultUtil;
-
-import redis.clients.jedis.Jedis;
 
 @WebFilter(urlPatterns="/*")
 public class Authentication implements Filter{
+	
+	public Authentication() {
+		System.out.println("Authentication constructor");
+	}
+	
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
 		// TODO Auto-generated method stub
+		// 加载spring配置
+		SpringApplication.bootstrap();
 		request.setCharacterEncoding("UTF-8");
-		Cookie[] cookies = ((HttpServletRequest) request).getCookies();
-		if (cookies != null) {
-			for(Cookie cookie: cookies) {
-				if (cookie.getName().equals("user")) {
-					// 判断登陆状态
-					String sessionId = cookie.getValue();
-					System.out.println(sessionId);
-					Jedis jedis = RedisUtil.connect();
-					if (jedis.exists(sessionId)) {
-						System.out.println("用户已经登陆，且未过期");
-						jedis.expire(sessionId, 60*60*24); // 更新过期时间
-						chain.doFilter(request, response);
-						return;
-					}
-				}
-			}
+		boolean isLogin = ((UserSession) SpringApplication.applicationContext.getBean("userSessionBean")).isLogin((HttpServletRequest) request);
+		if (isLogin) {
+			chain.doFilter(request, response);
+			return;
 		}
 		// 白名单中接口放行
 		List<String> whiteList = new ArrayList<>();

@@ -26,6 +26,10 @@ public class Auth extends HttpServlet {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
+	public Auth() {
+		System.out.println("auth 实例化");
+	}
 
 	@Override
 	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
