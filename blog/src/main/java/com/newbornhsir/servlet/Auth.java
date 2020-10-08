@@ -20,7 +20,7 @@ import com.newbornhsir.util.ResultUtil;
 
 import redis.clients.jedis.Jedis;
 
-@WebServlet(urlPatterns="/auth")
+@WebServlet(urlPatterns="/auths")
 public class Auth extends HttpServlet {
 	/**
 	 * 
